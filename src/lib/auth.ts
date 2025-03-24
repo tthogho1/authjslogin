@@ -1,20 +1,23 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import GitHubProvider from "next-auth/providers/github";
+import createStore from 'react-auth-kit/createStore';
 
-export const authOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
-  ],
-  secret: process.env.NEXTAUTH_SECRET,
-  pages: {
-    signIn: "/auth/signin",
-  },
-};
+// 認証状態の型定義
+interface AuthState {
+  isAuthenticated: boolean;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    picture: string;
+  } | null;
+}
+
+// 認証状態を管理するための設定
+
+const store = createStore({
+  authName:'_auth',
+  authType:'cookie',
+  cookieDomain: window.location.hostname,
+  cookieSecure: window.location.protocol === 'https:',
+});
+
+export {store};
